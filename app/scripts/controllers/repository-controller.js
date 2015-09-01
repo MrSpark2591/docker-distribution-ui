@@ -10,35 +10,35 @@
 angular.module('repository-controller', ['registry-services', 'app-mode-services'])
   .controller('RepositoryController', ['$scope', '$route', '$routeParams', '$location', '$modal', 'Repository', 'AppMode',
   function($scope, $route, $routeParams, $location, $modal, Repository, AppMode){
-  
+
     $scope.$route = $route;
     $scope.$location = $location;
     $scope.$routeParams = $routeParams;
-    
+
     $scope.searchTerm = $route.current.params.searchTerm;
     $scope.repositoryUser = $route.current.params.repositoryUser;
     $scope.repositoryName = $route.current.params.repositoryName;
     $scope.repository = $scope.repositoryUser + '/' + $scope.repositoryName;
-  
+
     $scope.repositories = Repository.query();
-    
+
     $scope.appMode = AppMode.query();
-    
+
     // selected repos
     $scope.selectedRepositories = [];
-    
+
     // helper method to get selected tags
     $scope.selectedRepos = function selectedRepos() {
       return filterFilter($scope.repositories, { selected: true });
     };
-    
+
     // watch fruits for changes
     $scope.$watch('repositories|filter:{selected:true}', function(nv) {
       $scope.selectedRepositories = nv.map(function (repo) {
         return repo.name;
       });
     }, true);
-    
+
     $scope.openConfirmRepoDeletionDialog = function(size) {
       var modalInstance = $modal.open({
           animation: true,
@@ -61,5 +61,5 @@ angular.module('repository-controller', ['registry-services', 'app-mode-services
           }
       });
     };
-    
+
   }]);

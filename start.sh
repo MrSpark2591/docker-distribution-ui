@@ -12,9 +12,7 @@ die() {
 
 echo $ENV_DOCKER_REGISTRY_HOST
 
-echo "configuring port"
 sed -i "s/REGISTRY_PORT/$ENV_DOCKER_REGISTRY_PORT/" /etc/nginx/conf.d/default.conf
-echo "configuring host:"
 sed -i "s/REGISTRY_HOST/$ENV_DOCKER_REGISTRY_HOST/" /etc/nginx/conf.d/default.conf
 
 

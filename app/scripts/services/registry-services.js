@@ -22,12 +22,12 @@ angular.module('registry-services', ['ngResource'])
         method:'GET',
         isArray: true,
         transformResponse: function(data, headers){
-          var res = angular.fromJson(data).results;
+          var res = angular.fromJson(data).repositories;
+          var result = [];
           angular.forEach(res, function(value, key) {
-            value.username = ""+value.name.split("/")[0];
-            value.selected = false;
+            result.push({username: value.split("/")[0], selected: false, name: value, description: value});
           });
-          return res;
+          return result;
         }
       },
       'delete': {
@@ -38,15 +38,15 @@ angular.module('registry-services', ['ngResource'])
   }])
   .factory('Tag', ['$resource', '$log',  function($resource, $log){
     // TODO: rename :repo to repoUser/repoString for convenience.
-    return $resource('/v1/repositories/:repoUser/:repoName/tags', {}, {
+    return $resource('/v2/:repoUser/:repoName/tags/list', {}, {
       'query': {
         method:'GET',
         isArray: true,
         transformResponse: function(data, headers){
           var res = [];
-          var resp = angular.fromJson(data);
+          var resp = angular.fromJson(data).tags;
           for (var i in resp){
-            res.push({name: i, imageId: resp[i], selected: false});
+            res.push({name: resp[i], imageId: '' , selected: false});
           }
           return res;
         },

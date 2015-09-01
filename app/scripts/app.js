@@ -15,7 +15,7 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'ngTouch',    
+    'ngTouch',
     'registry-services', // TODO: Maybe the following dependencies are not needed? At least they weren't in the "yo angular" output.
     'main-controller',
     'repository-controller',
@@ -24,7 +24,7 @@ angular
     'repository-list-directive',
     'tag-list-directive',
     'image-details-directive',
-    'tag-item-controller',    
+    'tag-item-controller',
     'image-controller',
     'create-tag-controller',
     'delete-tags-controller',
@@ -44,13 +44,13 @@ angular
      $locationProvider.html5Mode(true);
 
     // Don't show the spinner when making XHR requests.
-    // Also, show the bar only if an XHR request takes longer than 50ms.    
+    // Also, show the bar only if an XHR request takes longer than 50ms.
     cfpLoadingBarProvider.includeSpinner = false;
-    cfpLoadingBarProvider.latencyThreshold = 10; 
-    
+    cfpLoadingBarProvider.latencyThreshold = 10;
+
     // Don't strip trailing slashes from calculated URLs
-    $resourceProvider.defaults.stripTrailingSlashes = false;    
-    
+    $resourceProvider.defaults.stripTrailingSlashes = false;
+
     $routeProvider.
       when('/home', {
         templateUrl: 'views/home.html',
@@ -59,6 +59,10 @@ angular
         templateUrl: 'views/repository-list.html',
       }).
       when('/repository/:repositoryUser/:repositoryName/', {
+        templateUrl: 'views/repository-detail.html',
+        controller: 'RepositoryController',
+      }).
+      when('/repository/:repositoryName/', {
         templateUrl: 'views/repository-detail.html',
         controller: 'RepositoryController',
       }).

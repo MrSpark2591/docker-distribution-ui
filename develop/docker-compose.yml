@@ -1,7 +1,5 @@
 frontend:
   build: .
-  links:
-    - registry:path-to-your-registry
   ports:
     - "9000:9000"
   volumes:
