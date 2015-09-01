@@ -1,18 +1,21 @@
-FROM debian:jessie
-MAINTAINER "Konrad Kleine"
+FROM nginx:1.9.4
+MAINTAINER "Mário Lameiras"
 
-
-USER root
 
 ############################################################
 # Setup environment variables
 ############################################################
 
-ENV WWW_DIR /var/www/html
-ENV SOURCE_DIR /tmp/source
-ENV START_SCRIPT /root/start-apache.sh
 
-RUN mkdir -pv $WWW_DIR
+
+ENV WWW_DIR /usr/share/nginx/html
+ENV SOURCE_DIR /tmp/source
+ENV START_SCRIPT /root/start.sh
+
+############################################################
+# Webserver configuration
+############################################################
+COPY nginx-default.conf /etc/nginx/conf.d/default.conf
 
 ############################################################
 # Speedup DPKG and don't use cache for packages
@@ -26,27 +29,16 @@ RUN echo "force-unsafe-io" > /etc/dpkg/dpkg.cfg.d/02apt-speedup
 # # we don't need and apt cache in a container
 RUN echo "Acquire::http {No-Cache=True;};" > /etc/apt/apt.conf.d/no-cache
 
-############################################################
-# Install and configure webserver software
-############################################################
 
 RUN apt-get -y update && \
-    export DEBIAN_FRONTEND=noninteractive && \
-    apt-get -y install \
-      apache2 \
-      libapache2-mod-auth-kerb \
-      libapache2-mod-proxy-html \
-      --no-install-recommends
-
-RUN a2enmod proxy
-RUN a2enmod proxy_http
+    export DEBIAN_FRONTEND=noninteractive
 
 ############################################################
 # This adds everything we need to the build root except those
 # element that are matched by .dockerignore.
 # We explicitly list every directory and file that is involved
 # in the build process but. All config files (like nginx) are
-# not listed to speed up the build process. 
+# not listed to speed up the build process.
 ############################################################
 
 # Create dirs
@@ -113,23 +105,12 @@ RUN apt-get -y install \
 # Add and enable the apache site and disable all other sites
 ############################################################
 
-RUN a2dissite 000*
-ADD apache-site.conf /etc/apache2/sites-available/docker-site.conf
-RUN a2ensite docker-site.conf
-
-ADD start-apache.sh $START_SCRIPT
+ADD start.sh $START_SCRIPT
 RUN chmod +x $START_SCRIPT
 
-ENV APACHE_RUN_USER www-data
-ENV APACHE_RUN_GROUP www-data
-ENV APACHE_LOG_DIR /var/log/apache2
-
-# Let people know how this was built
-ADD Dockerfile /root/Dockerfile
 
 # Exposed ports
-EXPOSE 80 443
+EXPOSE 80
 
-VOLUME ["/etc/apache2/server.crt", "/etc/apache2/server.key"]
 
 CMD $START_SCRIPT

@@ -3,7 +3,7 @@
 // This is the main entrypoint to interact with the Docker registry.
 
 // Helpful resources
-// 
+//
 // https://docs.angularjs.org/tutorial/step_11
 // https://docs.angularjs.org/api/ngResource/service/$resource
 
@@ -17,7 +17,7 @@ angular.module('registry-services', ['ngResource'])
     });
   }])
   .factory('Repository', ['$resource', '$log',  function($resource, $log){
-    return $resource('/v1/search?q=:searchTerm', {}, {
+    return $resource('/v2/_catalog', {}, {
       'query': {
         method:'GET',
         isArray: true,

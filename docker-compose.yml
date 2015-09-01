@@ -1,0 +1,10 @@
+distribution_ui:
+  build: .
+  ports:
+    - "8080:80"
+  volumes:
+    - ./dev:/usr/share/nginx/html
+  container_name: mariolameiras/distribution-ui
+  environment:
+    - ENV_DOCKER_REGISTRY_HOST=cynthia
+    - ENV_DOCKER_REGISTRY_PORT=5100
